@@ -1,32 +1,48 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="mx-auto text-center">
+      <!-- <router-link to="/">Home</router-link> | -->
+      <!-- <router-link to="/about">About</router-link> -->
     </div>
-    <router-view/>
+
+    <Navbar v-bind:user="user"/>
+    
+    <Chat v-bind:user="user" v-if="user" />
+    <Login v-else />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+  import Chat from "@/components/Chat.vue";
+  import Login from "@/components/Login.vue";
+  import Navbar from "@/components/Navbar.vue";
+  import firebase from "firebase";
+
+  export default {
+    name: "App",
+    data() {
+      return {
+        user: firebase.auth().currentUser,
+      };
+    },
+    components: {
+      Chat,
+      Login,
+      Navbar
+    },
+    methods: {
+      
+    },
+  };
+</script>
+
+
+<style>
+body {
+  background-color: #151515 !important;
+  /* background-color: #42b883; */
+  /* background-color:rgb(9, 218, 124); */
 }
+</style>
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
