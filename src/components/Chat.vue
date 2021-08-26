@@ -11,7 +11,7 @@
             id="inbox"
             class="
               contacts-outter-wrapper
-              border-end
+              
               tab-pane
               active
               bg-dark
@@ -29,7 +29,7 @@
             >
               <input
                 type="text"
-                class="form-control"
+                class="form-control bg-dark text-light mb-3"
                 name="search"
                 placeholder="Search"
               />
@@ -62,16 +62,22 @@
               <div
                 v-for="(msg, index) in messages"
                 v-bind:key="index"
-                :class="[(sentOrReceived(msg.userUID)) ? 'my-message' : 'info', 'message']"
+                :class="[
+                  sentOrReceived(msg.userUID) ? 'my-message' : 'info',
+                  'message',
+                ]"
               >
                 <img
                   class="img-circle medium-image"
                   :src="msg.photoURL"
                   :alt="msg.displayName"
                 />
-
-                <div 
-                :class="[(sentOrReceived(msg.userUID)) ? 'bg-dark' : 'bg-primary', 'message-body text-light']"
+<!-- MIN 17:07 -->
+                <div
+                  :class="[
+                    sentOrReceived(msg.userUID) ? 'bg-dark' : 'bg-primary',
+                    'message-body text-light',
+                  ]"
                 >
                   <div class="message-info">
                     <h4>{{ msg.displayName }}</h4>
@@ -185,6 +191,7 @@ export default {
 
 
 <style lang="scss">
+
 body {
   margin-top: 20px;
   background: #eee;
@@ -267,8 +274,8 @@ body {
 }
 
 .contacts-list {
+  border-right: 0.3px solid rgb(63, 63, 63);
   background-color: #fff;
-  border-right: 1px solid #cfdbe2;
   width: 305px;
   height: 100%;
   border-top-left-radius: 5px;
@@ -348,6 +355,7 @@ body {
 }
 
 .contacts-outter-wrapper {
+  border-right: 0.3px solid rgb(63, 63, 63);
   position: relative;
   width: 305px;
   direction: rtl;
@@ -635,7 +643,7 @@ body {
   min-height: 290px;
   height: calc(100vh - 320px);
   background-color: #fbfcff;
-  margin-bottom: 30px;
+  //margin-bottom: 30px;
   padding: 30px 5px 5px 5px;
   overflow-y: scroll;
 }
@@ -791,7 +799,8 @@ body {
 
 .message.info:after,
 .message.info:before {
-  border-right: 13px solid #2da9e9;
+  border-right: 13px solid #0275d8;
+  z-index: 0;
 }
 
 .message.success .message-body {
@@ -861,6 +870,10 @@ body {
 }
 
 .chat-footer {
+  border-top: 0.3px solid rgb(63, 63, 63);
+  box-shadow: 2px 2px 20px 20px rgb(34, 36, 41);
+  //margin-top: 0px;
+  padding-top: 30px !important;
   position: relative;
   width: 100%;
   padding: 0 80px;
@@ -883,6 +896,7 @@ body {
 }
 
 .chat-footer .send-message-button {
+  margin-top: 39px !important;
   display: block;
   position: absolute;
   width: 35px;
