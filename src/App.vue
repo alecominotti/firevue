@@ -43,6 +43,5 @@ body {
   /* background-color: #42b883; */
   /* background-color:rgb(9, 218, 124); */
 }
-</style>
 
 </style>

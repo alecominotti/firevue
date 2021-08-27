@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-3">
+  <div class="container mt-3 bg-dark">
     <link
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
       rel="stylesheet"
@@ -9,14 +9,7 @@
         <div class="tab-content">
           <div
             id="inbox"
-            class="
-              contacts-outter-wrapper
-              
-              tab-pane
-              active
-              bg-dark
-              text-light
-            "
+            class="contacts-outter-wrapper tab-pane active bg-dark text-light"
           >
             <form
               class="
@@ -36,15 +29,25 @@
             </form>
             <div class="contacts-outter">
               <ul class="list-unstyled contacts">
-                <li data-toggle="tab" data-target="#inbox-message-2">
+                <li
+                  v-for="(user, index) in latestUsers"
+                  v-bind:key="index"
+                  data-toggle="tab"
+                  data-target="#inbox-message-2"
+                >
                   <img
-                    alt=""
                     class="img-circle medium-image"
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                    :src="user.photoURL"
+                    :alt="user.displayName"
                   />
 
                   <div class="vcentered info-combo">
-                    <h3 class="no-margin-bottom name">John Doe</h3>
+                    <h3 class="no-margin-bottom name">
+                      {{ user.displayName }}
+                    </h3>
+                    <h6 class="p-0 m-0 small-date">
+                      {{ timeDifference(user.latestDate) }}
+                    </h6>
                   </div>
                   <div class="contacts-add">
                     <i class="text-success fa fa-check-circle"></i>
@@ -72,7 +75,6 @@
                   :src="msg.photoURL"
                   :alt="msg.displayName"
                 />
-<!-- MIN 17:07 -->
                 <div
                   :class="[
                     sentOrReceived(msg.userUID) ? 'bg-dark' : 'bg-primary',
@@ -81,7 +83,9 @@
                 >
                   <div class="message-info">
                     <h4>{{ msg.displayName }}</h4>
-                    <h5><i class="fa fa-clock-o"></i> 2:25 PM</h5>
+                    <h5>
+                      <i class="fa fa-clock-o"></i>{{ msg.createdAt | moment }}
+                    </h5>
                   </div>
                   <hr />
                   <div class="message-text">{{ msg.text }}</div>
@@ -143,6 +147,7 @@
 
 <script>
 import firebase from "firebase";
+import moment from "moment";
 
 export default {
   data() {
@@ -150,6 +155,7 @@ export default {
       message: "",
       messages: [],
       db: firebase.firestore(),
+      latestUsers: [],
     };
   },
 
@@ -174,6 +180,34 @@ export default {
     scrollDown() {
       this.$refs["scrollable"].scrollIntoView({ behavior: "smooth" });
     },
+    timeDifference(time) {
+      var current = Date.now();
+      var msPerMinute = 60 * 1000;
+      var msPerHour = msPerMinute * 60;
+      var msPerDay = msPerHour * 24;
+      var msPerMonth = msPerDay * 30;
+      var msPerYear = msPerDay * 365;
+
+      var elapsed = current - time;
+
+      if (elapsed < msPerMinute) {
+        return "Online"
+      } else if (elapsed < msPerHour) {
+        return Math.round(elapsed / msPerMinute) + " minutes ago";
+      } else if (elapsed < msPerDay) {
+        return Math.round(elapsed / msPerHour) + " hours ago";
+      } else if (elapsed < msPerMonth) {
+        return "approximately " + Math.round(elapsed / msPerDay) + " days ago";
+      } else if (elapsed < msPerYear) {
+        return (
+          "approximately " + Math.round(elapsed / msPerMonth) + " months ago"
+        );
+      } else {
+        return (
+          "approximately " + Math.round(elapsed / msPerYear) + " years ago"
+        );
+      }
+    },
   },
   mounted() {
     this.db
@@ -185,19 +219,38 @@ export default {
           this.scrollDown();
         }, 10);
       });
+
+    this.db
+      .collection("user_status")
+      .orderBy("latestDate", "desc")
+      .onSnapshot((querySnap) => {
+        this.latestUsers = querySnap.docs.map((doc) => doc.data());
+      });
+  },
+  filters: {
+    moment: function (date) {
+      return moment(date).format("MMMM Do YYYY, h:mm:ss a");
+    },
   },
 };
 </script>
 
 
 <style lang="scss">
-
-body {
-  margin-top: 20px;
-  background: #eee;
+.container {
+  box-shadow: 10px 10px 15px 0px rgba(255, 255, 255, 0.2);
+  padding: 0px !important;
 }
-.contacts li > .info-combo > h3.name {
+
+.small-date {
   font-size: 12px;
+  font-weight: 900;
+  color: #0ec8a2;
+  position: absolute;
+}
+
+.contacts li > .info-combo > h3.name {
+  font-size: 14px;
 }
 
 .contacts li .message-time {
@@ -370,7 +423,6 @@ body {
   width: 100%;
   height: 5px;
   bottom: 0;
-
   border-bottom-left-radius: 4px;
 }
 
@@ -708,7 +760,7 @@ body {
 .message .message-info > h5 > i {
   font-size: 11px;
   font-weight: 700;
-  margin: 0 2px 0 0;
+  margin: 0 2px 0 5px;
   color: #a2b8c5;
 }
 
@@ -724,7 +776,8 @@ body {
   // Nombre
   font-size: 14px;
   font-weight: 600;
-  margin: 7px 13px 0 10px;
+  margin: 7px 13px 0 -20px;
+  padding-left: 30px !important;
   color: #65addd;
   float: left;
 }
@@ -740,6 +793,7 @@ body {
   text-align: left;
   padding: 3px 13px 10px 13px;
   font-size: 17px;
+  word-wrap: break-word;
 }
 
 .message.my-message .message-body {
