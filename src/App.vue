@@ -4,36 +4,37 @@
       <!-- <router-link to="/">Home</router-link> | -->
       <!-- <router-link to="/about">About</router-link> -->
     </div>
-
-    <Navbar v-bind:user="user"/>
-    
+ 
+    <Navbar v-bind:user="user" />
+   
     <Chat v-bind:user="user" v-if="user" />
-    <Login v-else />
+    <Login ref="login" v-else />
+   
   </div>
 </template>
 
 <script>
-  import Chat from "@/components/Chat.vue";
-  import Login from "@/components/Login.vue";
-  import Navbar from "@/components/Navbar.vue";
-  import firebase from "firebase";
+import Chat from "@/components/Chat.vue";
+import Login from "@/components/Login.vue";
+import Navbar from "@/components/Navbar.vue";
+import firebase from "firebase";
 
-  export default {
-    name: "App",
-    data() {
-      return {
-        user: firebase.auth().currentUser,
-      };
-    },
-    components: {
-      Chat,
-      Login,
-      Navbar
-    },
-    methods: {
-      
-    },
-  };
+export default {
+  name: "App",
+  data() {
+    return {
+      user: firebase.auth().currentUser,
+    };
+  },
+  components: {
+    Chat,
+    Login,
+    Navbar,
+  },
+  methods: {
+
+  },
+};
 </script>
 
 
@@ -43,5 +44,4 @@ body {
   /* background-color: #42b883; */
   /* background-color:rgb(9, 218, 124); */
 }
-
 </style>

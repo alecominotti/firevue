@@ -6,6 +6,7 @@
 
 <script>
 import firebase from "firebase";
+import chat from "@/components/Login.vue";
 
 export default {
   data() {
@@ -44,15 +45,9 @@ export default {
             this.db.collection("user_status").add(userStatus);
           } else {
             querySnapshot.forEach((doc) => {
-              doc.ref
-                .update({
-                  latestDate: Date.now(),
-                })
-                .then(() => {
-                  console.log(
-                    "Bienvenidx de vuelta " + user.displayName + " :)"
-                  );
-                });
+              doc.ref.update({
+                latestDate: Date.now(),
+              });
             });
           }
         })
