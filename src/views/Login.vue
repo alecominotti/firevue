@@ -6,7 +6,6 @@
 
 <script>
 import firebase from "firebase";
-import chat from "@/components/Login.vue";
 
 export default {
   data() {
@@ -23,15 +22,14 @@ export default {
         //firebase.auth().signInWithRedirect(provider)
         .then((result) => {
           var user = result.user;
-          this.updateUserStatus(user);
+          this.updateUserStatus(user, this.db);
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    async updateUserStatus(user) {
-      this.db
-        .collection("user_status")
+    async updateUserStatus(user, db) {
+      db.collection("user_status")
         .where("userID", "==", user.uid)
         .get()
         .then((querySnapshot) => {
@@ -55,6 +53,11 @@ export default {
           console.log("Error obteniendo el documento: ", error);
         });
     },
+  },
+  mounted() {
+    if(firebase.auth().currentUser){
+      this.$router.push('/')
+    }
   },
 };
 </script>

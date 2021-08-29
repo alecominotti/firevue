@@ -1,13 +1,25 @@
 .container {
-  box-shadow: 10px 10px 15px 0px rgba(255, 255, 255, 0.2);
+  //box-shadow: 10px 10px 15px 0px rgba(255, 255, 255, 0.2);
   padding: 0px !important;
 }
 
-.small-date {
+.small-status {
   font-size: 12px;
-  font-weight: 900;
-  color: #0ec8a2;
   position: absolute;
+}
+
+.small-status-online{
+  color: #0ec8a2;
+  font-weight: 900;
+}
+
+.small-status-offline{
+  color: #8b9299;
+  font-weight: 400;
+}
+
+.small-status-online-bg{
+  background-color: #0ec8a307 !important;
 }
 
 .contacts li > .info-combo > h3.name {
@@ -273,10 +285,13 @@
   text-overflow: ellipsis;
 }
 
-.contacts li .contacts-add {
-  width: 50px;
+.contacts li .contacts-add { // Online dot/circle
+  width: 35px;
   float: right;
   z-index: 23299;
+  margin-top: 15px;
+  font-size: 10px;
+  opacity: 100%;
 }
 
 .contacts li .message-time {
@@ -520,14 +535,14 @@
 
 .message .message-info > h5 > i {
   font-size: 11px;
-  font-weight: 700;
-  margin: 0 2px 0 5px;
+  font-weight: 500;
+  margin: 0 5px 0 0px;
   color: #a2b8c5;
 }
 
 .message .message-info > h5 {
   color: #a2b8c5;
-  margin: 8px 0 0 0;
+  margin: 8px 5px 0 0;
   font-size: 12px;
   float: right;
   padding-right: 10px;
@@ -614,6 +629,7 @@
 
 .message.info:after,
 .message.info:before {
+  // Punta de globo de dialogo
   border-right: 13px solid #0275d8;
   z-index: 0;
 }

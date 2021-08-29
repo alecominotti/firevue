@@ -1,9 +1,11 @@
 <template>
   <div class="container mt-3 bg-dark">
-    <link
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
+    <script
+      src="https://kit.fontawesome.com/1f3d379ce9.js"
+      crossorigin="anonymous"
+      type="application/javascript"
+    ></script>
+
     <div class="panel messages-panel bg-dark text-light">
       <div class="contacts-list bg-dark text-light">
         <div class="tab-content">
@@ -11,26 +13,25 @@
             id="inbox"
             class="contacts-outter-wrapper tab-pane active bg-dark text-light"
           >
-            <form
-              class="
-                panel-search-form
-                info
-                form-group
-                has-feedback
-                no-margin-bottom
-              "
-            >
+            <div class="m-3">
               <input
+                v-model="searchText"
                 type="text"
                 class="form-control bg-dark text-light mb-3"
                 name="search"
-                placeholder="Search"
+                id="search"
+                placeholder="Buscar usuarios..."
               />
-            </form>
+            </div>
             <div class="contacts-outter">
               <ul class="list-unstyled contacts">
                 <li
-                  v-for="(user, index) in latestUsers"
+                  :class="[
+                    timeDifference(user.latestDate) == 'Online'
+                      ? 'small-status-online-bg'
+                      : '',
+                  ]"
+                  v-for="(user, index) in filteredUsers"
                   v-bind:key="index"
                   data-toggle="tab"
                   data-target="#inbox-message-2"
@@ -45,13 +46,23 @@
                     <h3 class="no-margin-bottom name">
                       {{ user.displayName }}
                     </h3>
-                    <h6 class="p-0 m-0 small-date">
+                    <h6
+                      class="small-status"
+                      :class="[
+                        timeDifference(user.latestDate) == 'Online'
+                          ? 'small-status-online'
+                          : 'small-status-offline',
+                        'errorClass',
+                      ]"
+                    >
                       {{ timeDifference(user.latestDate) }}
                     </h6>
                   </div>
-                  <div class="contacts-add">
-                    <i class="text-success fa fa-check-circle"></i>
-                  </div>
+                  <template v-if="timeDifference(user.latestDate) == 'Online'">
+                    <div class="contacts-add">
+                      <i class="fas fa-circle small-status-online"></i>
+                    </div>
+                  </template>
                 </li>
               </ul>
             </div>
@@ -84,7 +95,7 @@
                   <div class="message-info">
                     <h4>{{ msg.displayName }}</h4>
                     <h5>
-                      <i class="fa fa-clock-o"></i>{{ msg.createdAt | moment }}
+                      <i class="far fa-clock"></i>{{ msg.createdAt | moment }}
                     </h5>
                   </div>
                   <hr />
@@ -149,6 +160,7 @@
 import style from "@/assets/css/style.scss";
 import firebase from "firebase";
 import moment from "moment";
+import Login from "@/views/Login.vue";
 
 export default {
   data() {
@@ -157,6 +169,8 @@ export default {
       messages: [],
       db: firebase.firestore(),
       latestUsers: [],
+      filteredUsers: [],
+      searchText: "",
     };
   },
 
@@ -183,6 +197,7 @@ export default {
     },
     timeDifference(time) {
       var current = Date.now();
+      var msOnline = 30 * 1000;
       var msPerMinute = 60 * 1000;
       var msPerHour = msPerMinute * 60;
       var msPerDay = msPerHour * 24;
@@ -191,25 +206,36 @@ export default {
 
       var elapsed = current - time;
 
-      if (elapsed < msPerMinute) {
+      if (elapsed < msOnline) {
         return "Online";
+      } else if (elapsed < msPerMinute) {
+        return "Hace 30 segundos";
       } else if (elapsed < msPerHour) {
-        return Math.round(elapsed / msPerMinute) + " minutes ago";
+        return "Hace " + Math.round(elapsed / msPerMinute) + " minuto/s";
       } else if (elapsed < msPerDay) {
-        return Math.round(elapsed / msPerHour) + " hours ago";
+        return "Hace " + Math.round(elapsed / msPerHour) + " hora/s";
       } else if (elapsed < msPerMonth) {
-        return "approximately " + Math.round(elapsed / msPerDay) + " days ago";
+        return "Hace aprox. " + Math.round(elapsed / msPerDay) + " días";
       } else if (elapsed < msPerYear) {
-        return (
-          "approximately " + Math.round(elapsed / msPerMonth) + " months ago"
-        );
+        return "Hace aprox. " + Math.round(elapsed / msPerMonth) + " meses";
       } else {
-        return (
-          "approximately " + Math.round(elapsed / msPerYear) + " years ago"
+        return "Hace aprox. " + Math.round(elapsed / msPerYear) + " años";
+      }
+    },
+    async updateUserStatus(user, db) {
+      return Login.methods.updateUserStatus(user, db);
+    },
+    filterUsers() {
+      if (this.searchText === "") {
+        this.filteredUsers = this.latestUsers;
+      } else {
+        this.filteredUsers = this.latestUsers.filter((data) =>
+          data.displayName.toLowerCase().includes(this.searchText.toLowerCase())
         );
       }
     },
   },
+
   mounted() {
     this.db
       .collection("messages")
@@ -226,24 +252,31 @@ export default {
       .orderBy("latestDate", "desc")
       .onSnapshot((querySnap) => {
         this.latestUsers = querySnap.docs.map((doc) => doc.data());
+        this.filteredUsers = this.latestUsers;
       });
+
+    this.updateUserStatus(this.user, this.db);
 
     var intervalId;
 
-    window.onfocus = function () {
-      intervalId = window.setInterval(function () {
-        //En linea
-      }, 1000);
+    window.onfocus = () => {
+      intervalId = window.setInterval(() => {
+        this.updateUserStatus(this.user, this.db);
+      }, 2500);
     };
 
-    window.onblur = function () {
+    window.onblur = () => {
       clearInterval(intervalId);
-      // Ya no en linea
     };
+
+    document.getElementById("search").addEventListener("keyup", () => {
+      // Live user search
+      this.filterUsers();
+    });
   },
   filters: {
     moment: function (date) {
-      return moment(date).format("MMMM Do YYYY, h:mm:ss a");
+      return moment(date).format("DD/MM/YYYY - H:mm");
     },
   },
 };
