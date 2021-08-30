@@ -103,7 +103,7 @@
                 />
                 <div
                   :class="[
-                    sentOrReceived(msg.userUID) ? 'bg-dark' : 'bg-primary',
+                    sentOrReceived(msg.userUID) ? 'bg-dark' : 'bg-received',
                     'message-body text-light',
                   ]"
                 >

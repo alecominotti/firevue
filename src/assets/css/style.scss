@@ -47,6 +47,10 @@
   color: #0ec8a3b4;
 }
 
+.bg-received{
+  background-color: #2daae917 !important;
+}
+
 .contacts li > .info-combo > h3.name {
   font-size: 14px;
 }
@@ -383,7 +387,6 @@
 }
 
 .message-body {
-  background-color: #fbfcff;
   height: 100%;
   width: calc(100% - 305px);
   float: right;

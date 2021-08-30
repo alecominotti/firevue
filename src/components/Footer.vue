@@ -10,13 +10,13 @@
 <style scoped>
 /* Sticky footer styles
 -------------------------------------------------- */
-/* html {
+ html {
   position: relative;
   min-height: 100%;
-}
+} 
 body {
-  margin-bottom: 60px; // Margin bottom by footer height 
-} */
+  margin-bottom: 60px; 
+}
 .footer {
   position: absolute;
   bottom: 0;
