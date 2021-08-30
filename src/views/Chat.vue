@@ -5,6 +5,12 @@
       crossorigin="anonymous"
       type="application/javascript"
     ></script>
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"
+      type="application/javascript"
+    ></script>
+    <script src="linkify.min.js" type="application/javascript"></script>
+    <script src="linkify-jquery.min.js" type="application/javascript"></script>
 
     <div class="panel messages-panel bg-dark text-light">
       <div class="contacts-list bg-dark text-light">
@@ -24,6 +30,9 @@
               />
             </div>
             <div class="contacts-outter">
+              <div :hidden="usersLoaded" class="fa-3x text-center loading-icon">
+                <i class="fas fa-circle-notch fa-spin"></i>
+              </div>
               <ul class="list-unstyled contacts">
                 <li
                   :class="[
@@ -74,6 +83,12 @@
           <div class="message-chat bg-dark text-light">
             <div class="chat-body bg-dark text-light">
               <div
+                :hidden="messagesLoaded"
+                class="fa-3x text-center loading-icon"
+              >
+                <i class="fas fa-circle-notch fa-spin"></i>
+              </div>
+              <div
                 v-for="(msg, index) in messages"
                 v-bind:key="index"
                 :class="[
@@ -99,7 +114,10 @@
                     </h5>
                   </div>
                   <hr />
-                  <div class="message-text">{{ msg.text }}</div>
+                  <div
+                    v-html="linkify(msg.text, { target: { url: '_blank' } })"
+                    class="message-text"
+                  ></div>
                 </div>
                 <br />
               </div>
@@ -161,6 +179,7 @@ import style from "@/assets/css/style.scss";
 import firebase from "firebase";
 import moment from "moment";
 import Login from "@/views/Login.vue";
+import linkify from "linkifyjs/lib/linkify-string";
 
 export default {
   data() {
@@ -171,6 +190,8 @@ export default {
       latestUsers: [],
       filteredUsers: [],
       searchText: "",
+      messagesLoaded: false,
+      usersLoaded: false,
     };
   },
 
@@ -234,6 +255,19 @@ export default {
         );
       }
     },
+    validURL(str) {
+      var pattern = new RegExp(
+        "^(https?:\\/\\/)?" + // protocol
+          "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+          "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+          "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+          "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+          "(\\#[-a-z\\d_]*)?$",
+        "i"
+      ); // fragment locator
+      return !!pattern.test(str);
+    },
+    linkify,
   },
 
   mounted() {
@@ -242,6 +276,7 @@ export default {
       .orderBy("createdAt")
       .onSnapshot((querySnap) => {
         this.messages = querySnap.docs.map((doc) => doc.data());
+        this.messagesLoaded = true;
         setTimeout(() => {
           this.scrollDown();
         }, 10);
@@ -253,6 +288,7 @@ export default {
       .onSnapshot((querySnap) => {
         this.latestUsers = querySnap.docs.map((doc) => doc.data());
         this.filteredUsers = this.latestUsers;
+        this.usersLoaded = true;
       });
 
     this.updateUserStatus(this.user, this.db);

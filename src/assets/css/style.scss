@@ -22,6 +22,31 @@
   background-color: #0ec8a307 !important;
 }
 
+.text-vue{
+  //color: #0ec8a2;
+  color: #6bcfbb;
+}
+
+.text-firebase{
+  //color: #e7a936;
+  color: #ddbb7b;
+}
+
+.about{
+  cursor: pointer;
+}
+
+.blurred{
+  filter: blur(30px);
+}
+
+.loading-icon{
+  z-index: 100;
+  //margin-left: 25%;
+  //margin-top: 10%;
+  color: #0ec8a3b4;
+}
+
 .contacts li > .info-combo > h3.name {
   font-size: 14px;
 }

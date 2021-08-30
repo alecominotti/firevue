@@ -13,8 +13,8 @@
       </a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="">
-            <router-link to="/about">About</router-link>
+          <li class="nav-item active">
+            <a class="nav-link about">About</a>
           </li>
         </ul>
 
@@ -40,7 +40,10 @@ export default {
   props: ["user"],
   methods: {
     logout() {
-      firebase.auth().signOut();
+      if (window.confirm("Cerrar sesion?")) {
+        firebase.auth().signOut();
+      }
+      
     },
   },
 };

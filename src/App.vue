@@ -3,6 +3,7 @@
     <Navbar v-bind:user="user" />
     <Chat v-bind:user="user" v-if="user" />
     <Login ref="login" v-else />
+    <Footer />
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import Chat from "@/views/Chat.vue";
 import Login from "@/views/Login.vue";
 import About from "@/views/About.vue";
 import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 import firebase from "firebase";
 
 export default {
@@ -25,8 +27,11 @@ export default {
     Login,
     Navbar,
     About,
+    Footer,
   },
-  methods: {},
+  mounted() {
+    document.title = 'FireVue'
+  }
 };
 </script>
 
@@ -34,6 +39,7 @@ export default {
 <style>
 body {
   background-color: #151515 !important;
+  /* background-color: #ffffff !important; */
   /* background-color: #42b883; */
   /* background-color:rgb(9, 218, 124); */
 }
