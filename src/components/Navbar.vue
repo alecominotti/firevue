@@ -38,16 +38,22 @@
             <div></div>
           </li>
         </ul>
+        <template v-if="user">
+          <img
+            v-b-tooltip.hover :title="loggedTooltip"
+            class="img-circle medium-image m-0"
+            :src="user.photoURL"
+            :alt="user.displayName"
+          />
+          <p v-b-tooltip.hover :title="loggedTooltip" class="m-0 user-select-none nav-link text-light">{{ user.displayName }}</p>
 
-        <a class="nav-link disabled text-light">{{ this.displayName }}</a>
-
-        <button
-          v-if="user"
-          class="btn btn-outline-secondary"
-          @click="(logoutModalShow = !logoutModalShow) && (modalShow = false)"
-        >
-          Cerrar sesion
-        </button>
+          <button
+            class="btn btn-outline-secondary"
+            @click="(logoutModalShow = !logoutModalShow) && (modalShow = false)"
+          >
+            Cerrar sesion
+          </button>
+        </template>
       </div>
     </div>
   </nav>
@@ -62,7 +68,8 @@ export default {
     return {
       modalShow: false,
       logoutModalShow: false,
-      displayName: this.returnDisplayName(),
+      user: this.user,
+      loggedTooltip: "Estas logueadx como " + this.user.displayName
     };
   },
   props: ["user"],
@@ -70,13 +77,6 @@ export default {
     logout() {
       this.logoutModalShow = false;
       firebase.auth().signOut();
-    },
-    returnDisplayName() {
-      if (this.user) {
-        return this.user.displayName;
-      } else {
-        return "";
-      }
     },
   },
   components: {
