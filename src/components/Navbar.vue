@@ -40,12 +40,12 @@
         </ul>
         <template v-if="user">
           <img
-            v-b-tooltip.hover :title="loggedTooltip"
+            v-b-tooltip.hover :title="loggedTooltip" v-b-tooltip.noninteractive
             class="img-circle medium-image m-0"
             :src="user.photoURL"
             :alt="user.displayName"
           />
-          <p v-b-tooltip.hover :title="loggedTooltip" class="m-0 user-select-none nav-link text-light">{{ user.displayName }}</p>
+          <p v-b-tooltip.hover :title="loggedTooltip" v-b-tooltip.noninteractive class="m-0 user-select-none nav-link text-light">{{ user.displayName }}</p>
 
           <button
             class="btn btn-outline-secondary"

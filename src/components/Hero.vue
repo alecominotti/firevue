@@ -46,9 +46,9 @@
       <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg rounded-3">
         <img
           class="rounded-lg-3"
-          src="https://images.macrumors.com/t/d2ykMDvdmJIBKTETOi8MbK0RbS0=/1600x900/smart/article-new/2020/02/whatsapp-dark-mode-beta.jpg"
+          src="@/assets/chat.png"
           alt=""
-          width="720"
+          height="450"
         />
       </div>
     </div>
