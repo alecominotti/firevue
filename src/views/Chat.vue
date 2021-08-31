@@ -224,24 +224,42 @@ export default {
       var msPerDay = msPerHour * 24;
       var msPerMonth = msPerDay * 30;
       var msPerYear = msPerDay * 365;
-
       var elapsed = current - time;
+
+      var timeElapsed;
+      var word;
 
       if (elapsed < msOnline) {
         return "Online";
       } else if (elapsed < msPerMinute) {
         return "Hace 30 segundos";
       } else if (elapsed < msPerHour) {
-        return "Hace " + Math.round(elapsed / msPerMinute) + " minuto/s";
+        timeElapsed = Math.round(elapsed / msPerMinute);
+        word = timeElapsed < 2 ? " minuto" : " minutos";
+        return "Hace " + timeElapsed + word;
       } else if (elapsed < msPerDay) {
-        return "Hace " + Math.round(elapsed / msPerHour) + " hora/s";
+        timeElapsed = Math.round(elapsed / msPerHour);
+        word = timeElapsed < 2 ? " hora" : " horas";
+        return "Hace " + timeElapsed + word;
       } else if (elapsed < msPerMonth) {
-        return "Hace aprox. " + Math.round(elapsed / msPerDay) + " días";
+        timeElapsed = Math.round(elapsed / msPerDay);
+        word = timeElapsed < 2 ? " dia" : " dias";
+        return "Hace " + timeElapsed + word;
       } else if (elapsed < msPerYear) {
-        return "Hace aprox. " + Math.round(elapsed / msPerMonth) + " meses";
+        timeElapsed = Math.round(elapsed / msPerMonth);
+        word = timeElapsed < 2 ? " mes" : " meses";
+        return "Hace " + timeElapsed + word;
       } else {
-        return "Hace aprox. " + Math.round(elapsed / msPerYear) + " años";
+        timeElapsed = Math.round(elapsed / msPerYear);
+        word = timeElapsed < 2 ? " año" : " años";
+        return "Hace " + timeElapsed + word;
       }
+    },
+    aYearAgo() {
+      var epochYear = 31536000000; // year in ms
+      var ago = Date.now()- epochYear;
+      //console.log(31536000 * 1000)
+      return ago;
     },
     async updateUserStatus(user, db) {
       return Login.methods.updateUserStatus(user, db);
@@ -255,18 +273,6 @@ export default {
         );
       }
     },
-    validURL(str) {
-      var pattern = new RegExp(
-        "^(https?:\\/\\/)?" + // protocol
-          "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-          "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-          "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-          "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-          "(\\#[-a-z\\d_]*)?$",
-        "i"
-      ); // fragment locator
-      return !!pattern.test(str);
-    },
     linkify,
   },
 
@@ -276,18 +282,21 @@ export default {
       .orderBy("createdAt")
       .onSnapshot((querySnap) => {
         this.messages = querySnap.docs.map((doc) => doc.data());
-        this.messagesLoaded = true;
         setTimeout(() => {
           this.scrollDown();
+          this.messagesLoaded = true;
         }, 10);
       });
 
     this.db
       .collection("user_status")
+      .where("latestDate", ">=", this.aYearAgo())
       .orderBy("latestDate", "desc")
+      .limit(300)
       .onSnapshot((querySnap) => {
         this.latestUsers = querySnap.docs.map((doc) => doc.data());
-        this.filteredUsers = this.latestUsers;
+        //this.filteredUsers = this.latestUsers;
+        this.filterUsers()
         this.usersLoaded = true;
       });
 

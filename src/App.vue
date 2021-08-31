@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Navbar :user="user" />
-    <Chat v-bind:user="user" v-if="user && !about" />
-    <Login v-else-if="!about" />
+    <Chat v-bind:user="user" v-if="user" />
+    <Login v-else />
     <Footer />
   </div>
 </template>
@@ -10,7 +10,6 @@
 <script>
 import Chat from "@/views/Chat.vue";
 import Login from "@/views/Login.vue";
-import About from "@/views/About.vue";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import firebase from "firebase";
@@ -26,7 +25,6 @@ export default {
     Chat,
     Login,
     Navbar,
-    About,
     Footer,
   },
   mounted() {

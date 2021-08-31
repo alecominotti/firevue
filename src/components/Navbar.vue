@@ -1,13 +1,6 @@
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
-    <!-- <b-modal
-      title="About"
-      v-model="modalShow"
-      content-class="bg-dark text-light"
-    >
-      Hello From Modal!
-    </b-modal> -->
-
+    <!-- About Modal -->
     <b-modal
       v-model="modalShow"
       content-class="text-center bg-dark text-light my-modal"
@@ -15,7 +8,27 @@
       size="xl"
       title="About"
     >
-      Firevue es una aplicacion web de chat en tiempo real desarrollada con Vue.js y Firebase. <br> Visita el repositorio de Github.
+      FireVue es una aplicacion web de chat en tiempo real desarrollada con
+      Vue.js y Firebase. <br />
+      Visita el
+      <a target="_blank" href="https://github.com/alecominotti/firevue"
+        >repositorio de Github.</a
+      >
+      <br />
+      <div class="row mt-5">
+        <div class="col-3"></div>
+        <div class="col-3">
+          <a href="https://vuejs.org/" target="_blank"
+            ><img width="130" src="@/assets/vue-logo.svg" alt="Vue.js"
+          /></a>
+        </div>
+        <div class="col-3">
+          <a href="https://firebase.google.com/" target="_blank"
+            ><img width="130" src="@/assets/firebase-logo.svg" alt="Firebase"
+          /></a>
+        </div>
+        <div class="col-3"></div>
+      </div>
       <template #modal-footer>
         <b-button
           variant="primary"
@@ -27,7 +40,7 @@
         </b-button>
       </template>
     </b-modal>
-
+    <!-- End Modal -->
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <img
@@ -63,8 +76,7 @@ import firebase from "firebase";
 export default {
   data() {
     return {
-      modalShow: false,
-      displayName: this.user.displayName,
+      displayName: this.returnDisplayName(),
     };
   },
   props: ["user", "modalShow"],
@@ -74,14 +86,19 @@ export default {
         firebase.auth().signOut();
       }
     },
+    returnDisplayName() {
+      if (this.user) {
+        return this.user.displayName;
+      } else {
+        return "";
+      }
+    },
   },
 };
 </script>
 
 <style>
-.my-modal {
-font-size: 20px !important;
-
-
-}
+  .my-modal {
+    font-size: 20px !important;
+  }
 </style>

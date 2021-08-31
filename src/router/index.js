@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Chat from '../views/Chat.vue'
-import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -11,11 +10,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Chat
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: About
   },
   {
     path: '/login',

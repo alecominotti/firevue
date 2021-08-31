@@ -16,7 +16,7 @@
       <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
         <h1 class="display-4 fw-bold lh-1">
           <span class="text-firebase">Fire</span
-          ><span class="text-vue">Vue</span> Chat Group
+          ><span class="text-vue">Vue</span> Group Chat
         </h1>
         <p class="lead mt-3">
           Inicia sesion con tu cuenta de Google y empeza a chatear!<br /><span
@@ -39,7 +39,7 @@
               fw-bold
             "
           >
-            Loguearse con Google
+            Login con Google
           </button>
         </div>
       </div>
@@ -57,7 +57,6 @@
 
 <script>
 export default {
-  data() {},
   props: ["loginSubmit"],
 };
 </script>

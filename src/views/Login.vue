@@ -1,7 +1,6 @@
 <template>
   <div class="login-container">
-    
-    <Hero v-bind:loginSubmit="loginSubmit"/>
+    <Hero v-bind:loginSubmit="loginSubmit" />
     <!-- <button @click="loginSubmit">Login with Google</button> -->
   </div>
 </template>
@@ -35,34 +34,36 @@ export default {
         });
     },
     async updateUserStatus(user, db) {
-      db.collection("user_status")
-        .where("userID", "==", user.uid)
-        .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            const userStatus = {
-              userID: user.uid,
-              displayName: user.displayName,
-              photoURL: user.photoURL,
-              latestDate: Date.now(),
-            };
-            this.db.collection("user_status").add(userStatus);
-          } else {
-            querySnapshot.forEach((doc) => {
-              doc.ref.update({
+      if (firebase.auth().currentUser) {
+        db.collection("user_status")
+          .where("userID", "==", user.uid)
+          .get()
+          .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+              const userStatus = {
+                userID: user.uid,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
                 latestDate: Date.now(),
+              };
+              this.db.collection("user_status").add(userStatus);
+            } else {
+              querySnapshot.forEach((doc) => {
+                doc.ref.update({
+                  latestDate: Date.now(),
+                });
               });
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("Error obteniendo el documento: ", error);
-        });
+            }
+          })
+          .catch((error) => {
+            console.log("Error obteniendo el documento: ", error);
+          });
+      }
     },
   },
   mounted() {
-    if(firebase.auth().currentUser){
-      this.$router.push('/')
+    if (firebase.auth().currentUser) {
+      this.$router.push("/");
     }
   },
 };
@@ -89,5 +90,4 @@ export default {
 //     }
 //   }
 // }
-
 </style>
