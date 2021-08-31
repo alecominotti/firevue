@@ -25,7 +25,7 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provider)
-        //firebase.auth().signInWithRedirect(provider)
+        //.signInWithRedirect(provider)
         .then((result) => {
           var user = result.user;
           this.updateUserStatus(user, this.db);

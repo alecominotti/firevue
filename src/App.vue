@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Navbar v-bind:user="user" />
-    <Chat v-bind:user="user" v-if="user" />
-    <Login ref="login" v-else />
+    <Navbar :user="user" />
+    <Chat v-bind:user="user" v-if="user && !about" />
+    <Login v-else-if="!about" />
     <Footer />
   </div>
 </template>
@@ -30,8 +30,8 @@ export default {
     Footer,
   },
   mounted() {
-    document.title = 'FireVue'
-  }
+    document.title = "FireVue";
+  },
 };
 </script>
 
