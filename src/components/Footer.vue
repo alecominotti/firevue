@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <footer class="footer bg-dark">
     <div class="container text-center">
       <span class="text-secondary">Ale Cominotti - 2021</span>
     </div>
@@ -7,23 +7,17 @@
 </template>
 
 
-<style scoped>
-/* Sticky footer styles
--------------------------------------------------- */
- html {
+<style>
+html {
   position: relative;
   min-height: 100%;
-} 
-body {
-  margin-bottom: 60px; 
 }
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 60px; /* Set the fixed height of the footer here */
+  height: 60px; /* fixed height of the footer */
   line-height: 60px; /* Vertically center the text there */
-  background-color: #202020;
   cursor: default;
 }
 </style>

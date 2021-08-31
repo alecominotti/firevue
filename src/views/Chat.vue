@@ -1,17 +1,5 @@
 <template>
   <div class="container mt-3 bg-dark">
-    <script
-      src="https://kit.fontawesome.com/1f3d379ce9.js"
-      crossorigin="anonymous"
-      type="application/javascript"
-    ></script>
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"
-      type="application/javascript"
-    ></script>
-    <script src="linkify.min.js" type="application/javascript"></script>
-    <script src="linkify-jquery.min.js" type="application/javascript"></script>
-
     <div class="panel messages-panel bg-dark text-light">
       <div class="contacts-list bg-dark text-light">
         <div class="tab-content">
@@ -257,7 +245,7 @@ export default {
     },
     aYearAgo() {
       var epochYear = 31536000000; // year in ms
-      var ago = Date.now()- epochYear;
+      var ago = Date.now() - epochYear;
       //console.log(31536000 * 1000)
       return ago;
     },
@@ -296,7 +284,7 @@ export default {
       .onSnapshot((querySnap) => {
         this.latestUsers = querySnap.docs.map((doc) => doc.data());
         //this.filteredUsers = this.latestUsers;
-        this.filterUsers()
+        this.filterUsers();
         this.usersLoaded = true;
       });
 

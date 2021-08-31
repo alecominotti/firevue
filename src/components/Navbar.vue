@@ -1,48 +1,27 @@
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
-    <!-- About Modal -->
-    <b-modal
-      v-model="modalShow"
-      content-class="text-center bg-dark text-light my-modal"
-      id="modal-xl"
-      size="xl"
-      title="About"
-    >
-      FireVue es una aplicacion web de chat en tiempo real desarrollada con
-      Vue.js y Firebase. <br />
-      Visita el
-      <a target="_blank" href="https://github.com/alecominotti/firevue"
-        >repositorio de Github.</a
-      >
-      <br />
-      <div class="row mt-5">
-        <div class="col-3"></div>
-        <div class="col-3">
-          <a href="https://vuejs.org/" target="_blank"
-            ><img width="130" src="@/assets/vue-logo.svg" alt="Vue.js"
-          /></a>
-        </div>
-        <div class="col-3">
-          <a href="https://firebase.google.com/" target="_blank"
-            ><img width="130" src="@/assets/firebase-logo.svg" alt="Firebase"
-          /></a>
-        </div>
-        <div class="col-3"></div>
-      </div>
+    <AboutModal :modalShow="modalShow" />
+
+    <!-- Logout Modal -->
+    <b-modal v-model="logoutModalShow" content-class="bg-dark text-light">
+      <template #modal-title>Cerrar sesion?</template>
       <template #modal-footer>
         <b-button
-          variant="primary"
+          variant="outline-secondary"
           size="md"
-          class="float-right"
-          @click="modalShow = false"
+          @click="logoutModalShow = false"
         >
-          Cerrar
+          Cancelar
+        </b-button>
+        <b-button variant="outline-danger" size="md" @click="logout">
+          Cerrar sesion
         </b-button>
       </template>
     </b-modal>
-    <!-- End Modal -->
+    <!-- End Logout Modal -->
+
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/2367px-Vue.js_Logo_2.svg.png"
           alt="Logo"
@@ -53,7 +32,7 @@
         FireVue
       </a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto">
           <li class="nav-item active">
             <a @click="modalShow = !modalShow" class="nav-link about">About</a>
             <div></div>
@@ -62,8 +41,12 @@
 
         <a class="nav-link disabled text-light">{{ this.displayName }}</a>
 
-        <button v-if="user" class="btn btn-outline-secondary" @click="logout">
-          Logout
+        <button
+          v-if="user"
+          class="btn btn-outline-secondary"
+          @click="(logoutModalShow = !logoutModalShow) && (modalShow = false)"
+        >
+          Cerrar sesion
         </button>
       </div>
     </div>
@@ -72,19 +55,21 @@
 
 <script>
 import firebase from "firebase";
+import AboutModal from "@/components/AboutModal.vue";
 
 export default {
   data() {
     return {
+      modalShow: false,
+      logoutModalShow: false,
       displayName: this.returnDisplayName(),
     };
   },
-  props: ["user", "modalShow"],
+  props: ["user"],
   methods: {
     logout() {
-      if (window.confirm("Cerrar sesion?")) {
-        firebase.auth().signOut();
-      }
+      this.logoutModalShow = false;
+      firebase.auth().signOut();
     },
     returnDisplayName() {
       if (this.user) {
@@ -94,11 +79,22 @@ export default {
       }
     },
   },
+  components: {
+    AboutModal,
+  },
 };
 </script>
 
 <style>
-  .my-modal {
-    font-size: 20px !important;
-  }
+.my-modal {
+  font-size: 18px !important;
+}
+
+.modal-footer {
+  border-top: 0 none !important;
+}
+
+.close {
+  display: none;
+}
 </style>

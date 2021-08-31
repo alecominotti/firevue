@@ -27,9 +27,6 @@ export default {
     Navbar,
     Footer,
   },
-  mounted() {
-    document.title = "FireVue";
-  },
 };
 </script>
 
