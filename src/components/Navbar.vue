@@ -40,7 +40,7 @@
             class="btn btn-outline-secondary"
             @click="(logoutModalShow = !logoutModalShow) && (modalShow = false)"
           >
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </template>
       </div>
@@ -54,13 +54,13 @@
       size="xl"
       title="About"
     >
-      FireVue es una aplicacion web de chat en tiempo real desarrollada con
+      FireVue es una aplicación web de chat en tiempo real desarrollada con
       Vue.js y Firebase.
       <br />
-      Luego de iniciar sesion con tu cuenta de Google podes comenzar a chatear.
+      Luego de iniciar sesión con tu cuenta de Google podés comenzar a chatear.
       <br />
-      El sitio no recolecta informacion personal de tu cuenta de Google, <br />
-      solo muestra tu nombre, tu imagen de perfil de Google y la ultima vez que
+      El sitio no recolecta información personal de tu cuenta de Google, <br />
+      solo muestra tu nombre, tu imagen de perfil de Google y la última vez que
       te conectaste a FireVue.
       <br />
       <br />
@@ -98,7 +98,7 @@
 
     <!-- Logout Modal -->
     <b-modal v-model="logoutModalShow" content-class="bg-dark text-light">
-      <template #modal-title>Cerrar sesion?</template>
+      <template #modal-title>Cerrar sesión?</template>
       <template #modal-footer>
         <b-button
           variant="outline-secondary"
@@ -108,7 +108,7 @@
           Cancelar
         </b-button>
         <b-button variant="outline-danger" size="md" @click="logout">
-          Cerrar sesion
+          Cerrar sesión
         </b-button>
       </template>
     </b-modal>

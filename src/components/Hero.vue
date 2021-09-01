@@ -19,9 +19,9 @@
           ><span class="text-vue">Vue</span> Group Chat
         </h1>
         <p class="lead mt-3">
-          Inicia sesion con tu cuenta de Google y empeza a chatear!<br /><span
+          Inicia sesión con tu cuenta de Google y empezá a chatear!<br /><span
             style="font-size: 18px"
-            >No recolectamos informacion de tu cuenta :)</span
+            >No recolectamos información de tu cuenta :)</span
           >
         </p>
         <div

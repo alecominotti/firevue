@@ -331,7 +331,7 @@ export default {
       this.fetchUsers();
       this.updateUserStatus(this.user, this.db);
     }
-
+    
     var intervalId;
 
     window.onfocus = () => {
