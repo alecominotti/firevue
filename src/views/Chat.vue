@@ -58,7 +58,7 @@
                   </div>
                   <template v-if="timeDifference(user.latestDate) == 'Online'">
                     <div class="contacts-add">
-                      <i class="fas fa-circle small-status-online"></i>
+                      <i class="fa fa-circle small-status-online"></i>
                     </div>
                   </template>
                 </li>
