@@ -352,6 +352,12 @@ export default {
       // Live user search
       this.filterUsers();
     });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key == "Escape") {
+        this.searchText = "";
+      }
+    });
   },
   filters: {
     moment: function (date) {
