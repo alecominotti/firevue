@@ -1,32 +1,12 @@
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
-    <AboutModal :modalShow="modalShow" />
-
-    <!-- Logout Modal -->
-    <b-modal v-model="logoutModalShow" content-class="bg-dark text-light">
-      <template #modal-title>Cerrar sesion?</template>
-      <template #modal-footer>
-        <b-button
-          variant="outline-secondary"
-          size="md"
-          @click="logoutModalShow = false"
-        >
-          Cancelar
-        </b-button>
-        <b-button variant="outline-danger" size="md" @click="logout">
-          Cerrar sesion
-        </b-button>
-      </template>
-    </b-modal>
-    <!-- End Logout Modal -->
-
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/2367px-Vue.js_Logo_2.svg.png"
+          src="@/assets/firevue-logo.png"
           alt="Logo"
           width="40"
-          height="40"
+          height="35"
           class="d-inline-block align-text-middle"
         />
         FireVue
@@ -65,12 +45,79 @@
         </template>
       </div>
     </div>
+    <!-- About modal -->
+    <b-modal
+      v-model="modalShow"
+      title-class="about-title"
+      content-class="text-center bg-dark text-light my-modal"
+      id="modal-xl"
+      size="xl"
+      title="About"
+    >
+      FireVue es una aplicacion web de chat en tiempo real desarrollada con
+      Vue.js y Firebase.
+      <br />
+      Luego de iniciar sesion con tu cuenta de Google podes comenzar a chatear.
+      <br />
+      El sitio no recolecta informacion personal de tu cuenta de Google, <br />
+      solo muestra tu nombre, tu imagen de perfil de Google y la ultima vez que
+      te conectaste a FireVue.
+      <br />
+      <br />
+      Visita el
+      <a target="_blank" href="https://github.com/alecominotti/firevue"
+        >repositorio de Github.</a
+      >
+      <br />
+      <div class="row mt-5">
+        <div class="col-3"></div>
+        <div class="col-3">
+          <a href="https://vuejs.org/" target="_blank"
+            ><img width="130" src="@/assets/vue-logo.svg" alt="Vue.js"
+          /></a>
+        </div>
+        <div class="col-3">
+          <a href="https://firebase.google.com/" target="_blank"
+            ><img width="85" src="@/assets/firebase-logo.svg" alt="Firebase"
+          /></a>
+        </div>
+        <div class="col-3"></div>
+      </div>
+      <template #modal-footer>
+        <b-button
+          variant="primary"
+          size="md"
+          class="float-right"
+          @click="modalShow = !modalShow"
+        >
+          Cerrar
+        </b-button>
+      </template>
+    </b-modal>
+    <!-- End about modal -->
+
+    <!-- Logout Modal -->
+    <b-modal v-model="logoutModalShow" content-class="bg-dark text-light">
+      <template #modal-title>Cerrar sesion?</template>
+      <template #modal-footer>
+        <b-button
+          variant="outline-secondary"
+          size="md"
+          @click="logoutModalShow = false"
+        >
+          Cancelar
+        </b-button>
+        <b-button variant="outline-danger" size="md" @click="logout">
+          Cerrar sesion
+        </b-button>
+      </template>
+    </b-modal>
+    <!-- End Logout Modal -->
   </nav>
 </template>
 
 <script>
 import firebase from "firebase";
-import AboutModal from "@/components/AboutModal.vue";
 
 export default {
   data() {
@@ -87,9 +134,6 @@ export default {
       this.logoutModalShow = false;
       firebase.auth().signOut();
     },
-  },
-  components: {
-    AboutModal,
   },
 };
 </script>

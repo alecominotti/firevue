@@ -43,12 +43,12 @@
           </button>
         </div>
       </div>
-      <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg rounded-3">
+      <div class="col-lg-4 offset-lg-1 mb-5 p-0 overflow-hidden rounded-3">
         <img
-          class="rounded-lg-3"
-          src="@/assets/chat.png"
+          class="rounded-lg-3 p-4"
+          src="@/assets/firevue-logo.png"
           alt=""
-          height="450"
+          height="400"
         />
       </div>
     </div>
