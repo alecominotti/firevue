@@ -10,13 +10,15 @@
     title="About"
   >
     FireVue es una aplicacion web de chat en tiempo real desarrollada con Vue.js
-    y Firebase. 
+    y Firebase.
     <br />
-    Luego de iniciar sesion con tu cuenta de Google podes comenzar a chatear con otras personas.
+    Luego de iniciar sesion con tu cuenta de Google podes comenzar a chatear.
     <br />
-    El sitio no recolecta informacion personal de tu cuenta de Google, <br> solo muestra tu nombre, tu imagen de perfil de Google y la ultima vez que te conectaste a FireVue.
+    El sitio no recolecta informacion personal de tu cuenta de Google, <br />
+    solo muestra tu nombre, tu imagen de perfil de Google y la ultima vez que te
+    conectaste a FireVue.
     <br />
-    <br>
+    <br />
     Visita el
     <a target="_blank" href="https://github.com/alecominotti/firevue"
       >repositorio de Github.</a
@@ -62,7 +64,7 @@ export default {
 </script>
 
 <style>
-.about-title{
+.about-title {
   font-size: 23px;
 }
 </style>

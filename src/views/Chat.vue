@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-3 bg-dark">
+  <div class="container mt-3 bg-dark" :class="[!userIsOnline ? 'blur' : '']">
     <div class="panel messages-panel bg-dark text-light">
       <div class="contacts-list bg-dark text-light">
         <div class="tab-content">
@@ -15,6 +15,7 @@
                 name="search"
                 id="search"
                 placeholder="Buscar usuarios..."
+                :disabled="!userIsOnline"
               />
             </div>
             <div class="contacts-outter">
@@ -60,6 +61,14 @@
                       <i class="fas fa-circle small-status-online"></i>
                     </div>
                   </template>
+                </li>
+                <li
+                  v-if="filteredUsers.length == 0 && searchText != ''"
+                  class="text-center"
+                >
+                  <div>
+                    <h3 class="no-margin-bottom no-results">Sin resultados</h3>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -118,6 +127,7 @@
                   v-model="message"
                   placeholder="Escribe algo..."
                   class="send-message-text bg-dark text-light"
+                  :disabled="!userIsOnline"
                 />
                 <button
                   @click.prevent="sendMessage"
@@ -132,6 +142,19 @@
         </div>
       </div>
     </div>
+    <!-- No connection modal -->
+    <b-modal
+      v-model="noConnectionModal"
+      centered
+      content-class="bg-dark text-light"
+      title="No hay conexion a internet :("
+      no-close-on-backdrop
+      no-close-on-esc
+    >
+      <p class="my-4">Por favor conectate para poder usar FireVue.</p>
+      <template #modal-footer><span class="m-0"></span></template>
+    </b-modal>
+    <!-- End no connection modal -->
   </div>
 
   <!-- <div class="container border bg-dark h-100">
@@ -180,13 +203,15 @@ export default {
       searchText: "",
       messagesLoaded: false,
       usersLoaded: false,
+      userIsOnline: true,
+      noConnectionModal: false,
     };
   },
 
   props: ["user"],
   methods: {
     async sendMessage() {
-      if (this.message != "") {
+      if (this.message != "" && this.userIsOnline) {
         const messageData = {
           userUID: this.user.uid,
           displayName: this.user.displayName,
@@ -246,11 +271,37 @@ export default {
     aYearAgo() {
       var epochYear = 31536000000; // year in ms
       var ago = Date.now() - epochYear;
-      //console.log(31536000 * 1000)
       return ago;
     },
     async updateUserStatus(user, db) {
-      return Login.methods.updateUserStatus(user, db);
+      if (this.userIsOnline) {
+        return Login.methods.updateUserStatus(user, db);
+      }
+    },
+    async fetchMessages() {
+      this.db
+        .collection("messages")
+        .orderBy("createdAt")
+        .onSnapshot((querySnap) => {
+          this.messages = querySnap.docs.map((doc) => doc.data());
+          setTimeout(() => {
+            this.scrollDown();
+            this.messagesLoaded = true;
+          }, 10);
+        });
+    },
+    async fetchUsers() {
+      this.db
+        .collection("user_status")
+        .where("latestDate", ">=", this.aYearAgo())
+        .orderBy("latestDate", "desc")
+        .limit(300)
+        .onSnapshot((querySnap) => {
+          this.latestUsers = querySnap.docs.map((doc) => doc.data());
+          //this.filteredUsers = this.latestUsers;
+          this.filterUsers();
+          this.usersLoaded = true;
+        });
     },
     filterUsers() {
       if (this.searchText === "") {
@@ -262,33 +313,24 @@ export default {
       }
     },
     linkify,
+    checkInternetConnection() {
+      var isOnLine = navigator.onLine;
+      if (isOnLine) {
+        this.userIsOnline = true;
+        this.noConnectionModal = false;
+      } else {
+        this.userIsOnline = false;
+        this.noConnectionModal = true;
+      }
+    },
   },
 
   mounted() {
-    this.db
-      .collection("messages")
-      .orderBy("createdAt")
-      .onSnapshot((querySnap) => {
-        this.messages = querySnap.docs.map((doc) => doc.data());
-        setTimeout(() => {
-          this.scrollDown();
-          this.messagesLoaded = true;
-        }, 10);
-      });
-
-    this.db
-      .collection("user_status")
-      .where("latestDate", ">=", this.aYearAgo())
-      .orderBy("latestDate", "desc")
-      .limit(300)
-      .onSnapshot((querySnap) => {
-        this.latestUsers = querySnap.docs.map((doc) => doc.data());
-        //this.filteredUsers = this.latestUsers;
-        this.filterUsers();
-        this.usersLoaded = true;
-      });
-
-    this.updateUserStatus(this.user, this.db);
+    if (this.userIsOnline) {
+      this.fetchMessages();
+      this.fetchUsers();
+      this.updateUserStatus(this.user, this.db);
+    }
 
     var intervalId;
 
@@ -301,6 +343,10 @@ export default {
     window.onblur = () => {
       clearInterval(intervalId);
     };
+
+    setInterval(() => {
+      this.checkInternetConnection(); // Internet connection check
+    }, 1000);
 
     document.getElementById("search").addEventListener("keyup", () => {
       // Live user search
